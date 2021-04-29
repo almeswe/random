@@ -42,7 +42,7 @@ __random_rdtsc proc
 		xor  ebx, ebx	; clear the ebx register
 		bt   eax, 19	; get value of the 20th bit of eax
 		rcl  ebx, 1		; append it to the cleared ebx register
-		bt	 eax, 16	; test 16th bit of eax
+		bt   eax, 16	; test 16th bit of eax
 		adc  ebx, 0		; ebx + 0 + CF (carry flag received from 16th bit) 
 		and  ebx, 1		; implementing xor through add+and
 		shl  eax, 1		; shift to left by 1
