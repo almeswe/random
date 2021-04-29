@@ -33,23 +33,21 @@ __randrange endp
 __random_rdtsc proc
 
 	rdtsc               ; get CPU cycles from the last restart (edx -> first 32bit, eax -> second 32bit)
-	mov  ecx, 20        ; count of loop iterations for LFSR algotithm processing
+	mov  ecx, 32        ; count of loop iterations for LFSR algorithm processing
 
 	cmp  eax, 0h        ; situation when xor returns 0 all time -> skip it
 	je	 exit
 
 	LFSR:
 		xor  ebx, ebx   ; clear the ebx register
-		bt   eax, 19    ; get value of the 20th bit of eax
+		bt   eax, 31    ; get value of the 32th bit of eax
 		rcl  ebx, 1     ; append it to the cleared ebx register
-		bt   eax, 16    ; test 16th bit of eax
-		adc  ebx, 0	    ; ebx + 0 + CF (carry flag received from 16th bit) 
+		bt   eax, 27    ; test 28th bit of eax
+		adc  ebx, 0	    ; ebx + 0 + CF (carry flag received from 28th bit) 
 		and  ebx, 1     ; implementing xor through add+and
 		shl  eax, 1     ; shift to left by 1
 		or   eax, ebx   ; set ebx (xored value) as eax's first bit
 	loop LFSR
-	
-	shl  eax, 12        ; clear first 12bits & locate generated number in 32bit grid from the beginning
 
 	exit:
 		ret             ; eax - pseudo random number
@@ -58,6 +56,9 @@ __random_rdtsc  endp
 
 main proc
 
+	push 10
+	push 21
+	call __randrange
 	ret
 
 main endp
