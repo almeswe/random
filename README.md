@@ -6,3 +6,6 @@
 # References
  - [LFSR](https://en.wikipedia.org/wiki/Linear-feedback_shift_register) 
  - [Rdtsc](https://docs.microsoft.com/en-us/cpp/intrinsics/rdtsc?view=msvc-160)
+
+# License
+ This project was published under [MIT](https://github.com/Almeswe/editor/blob/main/LICENSE) license.
