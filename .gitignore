@@ -2,3 +2,6 @@
 *.ipch
 random/.vs/random/v16/.suo
 *.db
+random/.vs/random/v16/Browse.VC.db-shm
+random/.vs/random/v16/Browse.VC.db-wal
+random/.vs/random/v16/Browse.VC.opendb
