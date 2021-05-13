@@ -2,8 +2,10 @@
 
 #include <intrin.h>
 
-#define DWORD unsigned int
-#define QWORD unsigned long long
+#define DWORD __int32
+#define QWORD __int64
+#define UDWORD unsigned DWORD
+#define UQWORD unsigned QWORD
 
 #define GET_LOWR_BITS(x) (DWORD)(x & 0xffffffff)
 #define GET_HIGH_BITS(x) (DWORD)(x >> 32)
@@ -13,51 +15,21 @@
 extern "C" DWORD __random32(DWORD);
 extern "C" QWORD __random64(DWORD, DWORD);
 
-unsigned long long __seed = __rdtsc();
+UQWORD seed = __rdtsc();
 
-DWORD random32(DWORD from = GET_LOWR_BITS(__seed))
+UDWORD random32(DWORD from = GET_LOWR_BITS(seed))
 {
-	DWORD rnum32 = 0;
-	__asm
-	{
-		push from
-		call __random32
-		add  esp, 4
-
-		mov rnum32, eax
-	}
-	__seed = rnum32;
-	return rnum32;
+	return (UDWORD)(seed = __random32(from));
 }
-QWORD random64(QWORD from = __seed)
+UQWORD random64(QWORD from = seed)
 {
-	QWORD rnum64 = 0;
-	DWORD lowr_part = GET_LOWR_BITS(from);
-	DWORD high_part = GET_HIGH_BITS(from);
-	__asm
-	{
-		push high_part
-		push lowr_part
-		call __random64
-		add  esp, 8
-
-		; it does not work
-		; mov dword ptr[rnum64], edx
-		; shl qword ptr[rnum64], 32
-		; or  dword ptr[rnum64], eax
-
-		mov lowr_part, eax
-		mov high_part, edx
-	}
-	rnum64 = (rnum64 = high_part) << 32 | lowr_part;
-	__seed = rnum64;
-	return rnum64;
+	return (UQWORD)(seed = __random64(GET_HIGH_BITS(from), GET_LOWR_BITS(from)));
 }
-DWORD randrange32(DWORD from, DWORD to)
+UDWORD randrange32(DWORD from, DWORD to)
 {
-	return (DWORD)(TO_RANGE(random32(), from, to));
+	return (UDWORD)(TO_RANGE(random32(), from, to));
 }
-QWORD randrange64(QWORD from, QWORD to)
+UQWORD randrange64(QWORD from, QWORD to)
 {
-	return (QWORD)(TO_RANGE(random64(), from, to));
+	return (UQWORD)(TO_RANGE(random64(), from, to));
 }
